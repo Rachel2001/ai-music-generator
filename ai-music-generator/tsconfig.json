@@ -12,9 +12,11 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "baseUrl": ".", // Base URL for absolute paths
     "paths": {
-      "@/*": ["./src/*"],
-      "utils/*": ["./utils/*"] 
+      "@/*": ["src/*"], // Maps @ to src folder
+      "components/*": ["components/*"], // Maps components to components folder
+      "utils/*": ["utils/*"] // Maps utils to utils folder
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
