@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Html, Main } from "next/document";
 
 export default function Document() {
