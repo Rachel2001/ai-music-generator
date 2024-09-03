@@ -1,0 +1,46 @@
+.homePageContainer {
+  position: relative;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+.BackgroundGradientAnimation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  padding: 20px;
+  color: black;
+  margin-top: 180px;
+}
+
+.heading {
+  font-size: 34px;
+  text-align: center;
+}
+
+.slogan {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.button {
+  background: black;
+  color: white;
+  padding: 18px;
+  border-radius: 25px;
+}

@@ -1,0 +1,113 @@
+.Header {
+  font-size: 30px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.BackgroundGradientAnimation {
+  position: fixed; /* Changed from absolute to fixed */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.mainPageContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.mainContent {
+  display: flex;
+  flex-direction: column;
+  flex: 1; /* Ensure it takes up remaining space */
+  position: relative;
+  z-index: 1;
+  padding: 20px;
+  color: black;
+  overflow: auto; /* Handle overflow within content */
+  padding-bottom: 150px; /* Increased space at the bottom */
+}
+
+.mainHeading {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+/* Categories Section */
+.categories {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  margin-bottom: 40px;
+}
+
+.category {
+  background-size: cover;
+  background-position: center;
+  height: 200px; /* Adjust as per your needs */
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+  transition: transform 0.3s ease;
+}
+
+.category:hover {
+  transform: scale(1.05);
+}
+
+/* Top Tracks Section */
+.subHeading {
+  font-size: 24px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.tabButtons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tabButtons button {
+  padding: 10px 20px;
+  background-color: #dcdcdc; /* Neutral color for inactive tabs */
+  border: none;
+  color: black;
+  cursor: pointer;
+  border-radius: 5px;
+  font-weight: 600;
+}
+
+.tabButtons button.activeTab {
+  background-color: #007bff; /* Active tab color */
+  color: white;
+}
+
+/* Tracks Section */
+.tracks {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.track {
+  background-color: #f0f0f0; /* Light background for tracks */
+  padding: 15px;
+  border-radius: 8px;
+  color: black;
+  font-size: 14px;
+}
+
+.track p {
+  margin: 5px 0;
+}

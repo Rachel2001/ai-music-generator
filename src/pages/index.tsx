@@ -1,9 +1,11 @@
 import React from "react";
+import Link from "next/link";
+import styles from "../styles/HomePage.module.css";
 import { BackgroundGradientAnimation } from "../components/ui/background-gradient-animation";
 
 const HomePage: React.FC = () => {
   return (
-    <div>
+    <div className={styles.homePageContainer}>
       <BackgroundGradientAnimation
         gradientBackgroundStart="rgb(0, 100, 255)"
         gradientBackgroundEnd="rgb(255, 0, 100)"
@@ -16,7 +18,18 @@ const HomePage: React.FC = () => {
         size="90%"
         blendingValue="overlay"
       >
-        <h1>Hello, welcome to my homepage!</h1>
+        <div className={styles.content}>
+          <h1 className={styles.heading}>Welcome To HarmoniAI!</h1>
+          <p className={styles.slogan}>
+            Create your own music with just a few clicks. Dive into the world of
+            endless musical possibilities!
+          </p>
+          <div className={styles.buttonContainer}>
+            <Link href="/main" className={styles.button}>
+              Get started
+            </Link>
+          </div>
+        </div>
       </BackgroundGradientAnimation>
     </div>
   );
