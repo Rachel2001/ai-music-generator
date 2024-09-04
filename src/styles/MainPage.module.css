@@ -27,7 +27,7 @@
   position: relative;
   z-index: 1;
   padding: 20px;
-  color: black;
+  color: white;
   overflow: auto; /* Handle overflow within content */
   padding-bottom: 150px; /* Increased space at the bottom */
 }
@@ -101,6 +101,9 @@
 }
 
 .track {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   background-color: #f0f0f0; /* Light background for tracks */
   padding: 15px;
   border-radius: 8px;
@@ -108,6 +111,67 @@
   font-size: 14px;
 }
 
-.track p {
-  margin: 5px 0;
+.trackInfo {
+  flex: 1;
+  margin-left: 20px;
 }
+
+.track img {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.musicControls {
+  display: flex;
+  gap: 10px;
+}
+
+.controlIcon {
+  font-size: 18px;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+}
+
+.controlIcon:hover {
+  color: #007bff;
+}
+.track {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #f0f0f0; /* Light background for tracks */
+  padding: 15px;
+  border-radius: 8px;
+  color: black;
+  font-size: 14px;
+}
+
+.trackInfo {
+  flex: 1;
+  margin-left: 20px;
+}
+
+.track img {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.musicControls {
+  display: flex;
+  gap: 10px;
+}
+
+.controlIcon {
+  font-size: 18px;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+}
+
+.controlIcon:hover {
+  color: #007bff;
+}
+

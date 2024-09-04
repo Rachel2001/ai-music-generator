@@ -1,12 +1,12 @@
 import React from "react";
 import Link from "next/link";
 import styles from "../styles/HomePage.module.css";
-import { BackgroundGradientAnimation } from "../components/ui/background-gradient-animation";
+import { BackgroundBeams } from "../components/ui/background-beams";
 
 const HomePage: React.FC = () => {
   return (
     <div className={styles.homePageContainer}>
-      <BackgroundGradientAnimation
+      <BackgroundBeams
         gradientBackgroundStart="rgb(0, 100, 255)"
         gradientBackgroundEnd="rgb(255, 0, 100)"
         firstColor="255, 0, 0"
@@ -30,7 +30,7 @@ const HomePage: React.FC = () => {
             </Link>
           </div>
         </div>
-      </BackgroundGradientAnimation>
+      </BackgroundBeams>
     </div>
   );
 };

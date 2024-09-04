@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import styles from "../styles/MainPage.module.css";
-import { BackgroundGradientAnimation } from "../components/ui/background-gradient-animation";
+import { BackgroundBeams } from "../components/ui/background-beams";
 import { PlaceholdersAndVanishInput } from "@/components/ui/placeholders-and-vanish-input";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlay, faPause, faForward } from "@fortawesome/free-solid-svg-icons";
 
 // Define the structure of track data
 interface Track {
   title: string;
   artist: string;
   description: string;
+  albumArt: string;
 }
 
 // Define the structure for the entire dataset
@@ -18,80 +21,94 @@ interface TracksData {
   allTime: Track[];
 }
 
-// Track data with explicit types
+// Define the music categories (genres), removed Classical and Electronic
+const categories: string[] = ["Pop", "Rock", "Hip-Hop", "Jazz"];
+
+// Track data with explicit types and made-up artists/songs
 const tracksData: TracksData = {
   today: [
     {
-      title: "Track 1",
-      artist: "Artist 1",
-      description: "Description of Track 1",
+      title: "Electric Dream",
+      artist: "Skylar Nova",
+      description: "A fusion of synth beats and ambient vocals.",
+      albumArt: "/images/electric-dream.jpg",
     },
     {
-      title: "Track 2",
-      artist: "Artist 2",
-      description: "Description of Track 2",
+      title: "Sunset Mirage",
+      artist: "Zara Eclipse",
+      description: "A dreamy pop anthem perfect for evening vibes.",
+      albumArt: "/images/sunset-mirage.jpg",
     },
     {
-      title: "Track 3",
-      artist: "Artist 3",
-      description: "Description of Track 3",
+      title: "Echoes of Time",
+      artist: "Liam Vortex",
+      description: "A deep house track with reverberating rhythms.",
+      albumArt: "/images/echoes-of-time.jpg",
     },
   ],
   thisWeek: [
     {
-      title: "Track 4",
-      artist: "Artist 4",
-      description: "Description of Track 4",
+      title: "Galactic Groove",
+      artist: "Orion Pulse",
+      description: "A funky, space-inspired dance track.",
+      albumArt: "/images/galactic-groove.jpg",
     },
     {
-      title: "Track 5",
-      artist: "Artist 5",
-      description: "Description of Track 5",
+      title: "Moonlight Serenade",
+      artist: "Luna Breeze",
+      description: "A smooth jazz number with hints of R&B.",
+      albumArt: "/images/moonlight-serenade.jpg",
     },
     {
-      title: "Track 6",
-      artist: "Artist 6",
-      description: "Description of Track 6",
+      title: "Rhythm of the Rain",
+      artist: "Storm Scribe",
+      description:
+        "A soulful track mixing natural sounds with electronic beats.",
+      albumArt: "/images/rhythm-of-the-rain.jpg",
     },
   ],
   thisMonth: [
     {
-      title: "Track 7",
-      artist: "Artist 7",
-      description: "Description of Track 7",
+      title: "Shadows in Motion",
+      artist: "Nova Phantom",
+      description: "A hauntingly beautiful trip-hop track.",
+      albumArt: "/images/shadows-in-motion.jpg",
     },
     {
-      title: "Track 8",
-      artist: "Artist 8",
-      description: "Description of Track 8",
+      title: "Starlight Symphony",
+      artist: "Celeste Harmony",
+      description: "An orchestral masterpiece with modern twists.",
+      albumArt: "/images/starlight-symphony.jpg",
     },
     {
-      title: "Track 9",
-      artist: "Artist 9",
-      description: "Description of Track 9",
+      title: "Ocean's Heartbeat",
+      artist: "Coral Wave",
+      description: "A chillout tune inspired by the sea's rhythms.",
+      albumArt: "/images/oceans-heartbeat.jpg",
     },
   ],
   allTime: [
     {
-      title: "Track 10",
-      artist: "Artist 10",
-      description: "Description of Track 10",
+      title: "Firefly's Flight",
+      artist: "Ignis Aura",
+      description: "A timeless ballad with ethereal harmonies.",
+      albumArt: "/images/fireflys-flight.jpg",
     },
     {
-      title: "Track 11",
-      artist: "Artist 11",
-      description: "Description of Track 11",
+      title: "Whispers of the Forest",
+      artist: "Emerald Wind",
+      description: "A folk-inspired melody with nature-inspired lyrics.",
+      albumArt: "/images/whispers-of-the-forest.jpg",
     },
     {
-      title: "Track 12",
-      artist: "Artist 12",
-      description: "Description of Track 12",
+      title: "Celestial Dawn",
+      artist: "Cosmos Nova",
+      description:
+        "An uplifting track blending classical and electronic elements.",
+      albumArt: "/images/celestial-dawn.jpg",
     },
   ],
 };
-
-// Define categories
-const categories = ["Pop", "Hip-Hop", "Rock n Roll", "Jazz"];
 
 const Main: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>("");
@@ -112,7 +129,7 @@ const Main: React.FC = () => {
 
   return (
     <div className={styles.mainPageContainer}>
-      <BackgroundGradientAnimation
+      <BackgroundBeams
         gradientBackgroundStart="rgb(0, 100, 255)"
         gradientBackgroundEnd="rgb(255, 0, 100)"
         firstColor="255, 0, 0"
@@ -131,17 +148,17 @@ const Main: React.FC = () => {
             onSubmit={handleSubmit}
           />
 
+          {/* Top Genres Section */}
           <h2 className={styles.mainHeading}>Top Genres</h2>
-
           <div className={styles.categories}>
             {categories.map((category, index) => (
               <div
                 key={index}
                 className={styles.category}
                 style={{
-                  backgroundImage: `url('/images/${category
-                    .toLowerCase()
-                    .replace(/ /g, "")}.jpg')`,
+                  backgroundImage: `url('/images/${
+                    category === "Rock" ? "rocknroll" : category.toLowerCase()
+                  }.jpg')`,
                 }}
               >
                 {category}
@@ -149,6 +166,7 @@ const Main: React.FC = () => {
             ))}
           </div>
 
+          {/* Top Tracks Section */}
           <h2 className={styles.subHeading}>Top Tracks</h2>
           <div className={styles.tabButtons}>
             <button
@@ -179,14 +197,39 @@ const Main: React.FC = () => {
           <div className={styles.tracks}>
             {tracksData[currentTab].map((track, index) => (
               <div key={index} className={styles.track}>
-                <p>{track.title}</p>
-                <p>{track.artist}</p>
-                <p>{track.description}</p>
+                {/* Display album art */}
+                <img
+                  src={track.albumArt}
+                  alt={track.title}
+                  className={styles.albumArt}
+                />
+
+                <div className={styles.trackInfo}>
+                  <p>{track.title}</p>
+                  <p>{track.artist}</p>
+                  <p>{track.description}</p>
+                </div>
+
+                {/* Music control buttons */}
+                <div className={styles.musicControls}>
+                  <FontAwesomeIcon
+                    icon={faPlay}
+                    className={styles.controlIcon}
+                  />
+                  <FontAwesomeIcon
+                    icon={faPause}
+                    className={styles.controlIcon}
+                  />
+                  <FontAwesomeIcon
+                    icon={faForward}
+                    className={styles.controlIcon}
+                  />
+                </div>
               </div>
             ))}
           </div>
         </div>
-      </BackgroundGradientAnimation>
+      </BackgroundBeams>
     </div>
   );
 };
