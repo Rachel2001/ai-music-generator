@@ -3,5 +3,8 @@
 @tailwind utilities;
 
 
-
+.background-beams {
+  --x: 50%;
+  --y: 50%;
+}
 

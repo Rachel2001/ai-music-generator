@@ -1,24 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
 .homePageContainer {
   position: relative;
   overflow: hidden;
   height: 100vh;
   width: 100vw;
+  margin: 0;
+  padding: 0;
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
 }
 
-.BackgroundGradientAnimation {
+.backgroundVideo {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 0;
+  object-fit: cover;
+  z-index: -1; /* Ensure the video is behind other content */
 }
 
 .content {
   position: relative;
   z-index: 1;
   padding: 20px;
-  color: black;
+  color: white; /* Changed to white for better contrast on dark video */
   margin-top: 180px;
 }
 
@@ -43,4 +52,5 @@
   color: white;
   padding: 18px;
   border-radius: 25px;
+  text-decoration: none; /* Remove underline from the link */
 }

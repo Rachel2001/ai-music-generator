@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import styles from "../styles/MainPage.module.css";
-import { BackgroundBeams } from "../components/ui/background-beams";
-import { PlaceholdersAndVanishInput } from "@/components/ui/placeholders-and-vanish-input";
+import BackgroundBeams from "../components/ui/background-beams";
+import { PlaceholdersAndVanishInput } from "../components/ui/placeholders-and-vanish-input";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay, faPause, faForward } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPlay,
+  faForward,
+  faBackward,
+} from "@fortawesome/free-solid-svg-icons";
 
-// Define the structure of track data
 interface Track {
   title: string;
   artist: string;
@@ -13,7 +16,6 @@ interface Track {
   albumArt: string;
 }
 
-// Define the structure for the entire dataset
 interface TracksData {
   today: Track[];
   thisWeek: Track[];
@@ -21,10 +23,8 @@ interface TracksData {
   allTime: Track[];
 }
 
-// Define the music categories (genres), removed Classical and Electronic
 const categories: string[] = ["Pop", "Rock", "Hip-Hop", "Jazz"];
 
-// Track data with explicit types and made-up artists/songs
 const tracksData: TracksData = {
   today: [
     {
@@ -113,6 +113,7 @@ const tracksData: TracksData = {
 const Main: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const [currentTab, setCurrentTab] = useState<keyof TracksData>("today");
+  const [playingTrack, setPlayingTrack] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
@@ -127,98 +128,98 @@ const Main: React.FC = () => {
     setCurrentTab(tab);
   };
 
+  const handlePlayTrack = (trackTitle: string) => {
+    if (playingTrack === trackTitle) {
+      console.log(`Paused: ${trackTitle}`);
+      setPlayingTrack(null); // Stop playing if the same track is clicked again
+    } else {
+      console.log(`Playing: ${trackTitle}`);
+      setPlayingTrack(trackTitle); // Set the track as playing
+    }
+  };
+
+  // Function to format the tab labels
+  const formatTabLabel = (tab: string) => {
+    return tab
+      .replace(/([A-Z])/g, " $1") // Insert a space before capital letters
+      .replace(/^./, (str) => str.toUpperCase()) // Capitalize the first letter
+      .trim(); // Remove any leading/trailing spaces
+  };
+
   return (
     <div className={styles.mainPageContainer}>
-      <BackgroundBeams
-        gradientBackgroundStart="rgb(0, 100, 255)"
-        gradientBackgroundEnd="rgb(255, 0, 100)"
-        firstColor="255, 0, 0"
-        secondColor="0, 255, 0"
-        thirdColor="0, 0, 255"
-        fourthColor="255, 255, 0"
-        fifthColor="255, 0, 255"
-        pointerColor="0, 255, 255"
-        size="90%"
-        blendingValue="overlay"
-      >
-        <h1 className={styles.Header}>Generate Your Music!</h1>
-        <div className={styles.mainContent}>
-          <PlaceholdersAndVanishInput
-            onChange={handleChange}
-            onSubmit={handleSubmit}
-          />
-
-          {/* Top Genres Section */}
-          <h2 className={styles.mainHeading}>Top Genres</h2>
-          <div className={styles.categories}>
-            {categories.map((category, index) => (
-              <div
-                key={index}
-                className={styles.category}
-                style={{
-                  backgroundImage: `url('/images/${
-                    category === "Rock" ? "rocknroll" : category.toLowerCase()
-                  }.jpg')`,
-                }}
-              >
-                {category}
-              </div>
-            ))}
-          </div>
-
-          {/* Top Tracks Section */}
-          <h2 className={styles.subHeading}>Top Tracks</h2>
-          <div className={styles.tabButtons}>
-            <button
-              className={currentTab === "today" ? styles.activeTab : ""}
-              onClick={() => handleTabClick("today")}
+      <div className={styles.backgroundBeams}>
+        <div className={styles.header}>
+          <h2 className={styles.headerText}>Generate your tracks here!</h2>
+        </div>
+        <div className={styles.searchBar}>
+          <form onSubmit={handleSubmit}>
+            <PlaceholdersAndVanishInput onChange={handleChange} />
+          </form>
+        </div>
+        <div className={styles.subHeading}>Top Genres</div>
+        <div className={styles.categories}>
+          {categories.map((category) => (
+            <div
+              key={category}
+              className={styles.category}
+              style={{
+                backgroundImage:
+                  category === "Rock"
+                    ? "url(/images/rocknroll.jpg)"
+                    : `url(/images/${category.toLowerCase()}.jpg)`,
+              }}
             >
-              Today
-            </button>
+              {category}
+            </div>
+          ))}
+        </div>
+        <div className={styles.subHeading}>Top Tracks</div>
+        <div className={styles.tabButtons}>
+          {Object.keys(tracksData).map((tab) => (
             <button
-              className={currentTab === "thisWeek" ? styles.activeTab : ""}
-              onClick={() => handleTabClick("thisWeek")}
+              key={tab}
+              className={
+                currentTab === tab
+                  ? `${styles.tab} ${styles.activeTab}`
+                  : styles.tab
+              }
+              onClick={() => handleTabClick(tab as keyof TracksData)}
             >
-              This Week
+              {formatTabLabel(tab)}
             </button>
-            <button
-              className={currentTab === "thisMonth" ? styles.activeTab : ""}
-              onClick={() => handleTabClick("thisMonth")}
+          ))}
+        </div>
+        <div className={styles.tracks}>
+          {tracksData[currentTab].map((track) => (
+            <div
+              key={track.title}
+              className={
+                playingTrack === track.title
+                  ? `${styles.track} ${styles.playingTrack}`
+                  : styles.track
+              }
             >
-              This Month
-            </button>
-            <button
-              className={currentTab === "allTime" ? styles.activeTab : ""}
-              onClick={() => handleTabClick("allTime")}
-            >
-              All Time
-            </button>
-          </div>
-          <div className={styles.tracks}>
-            {tracksData[currentTab].map((track, index) => (
-              <div key={index} className={styles.track}>
-                {/* Display album art */}
-                <img
-                  src={track.albumArt}
-                  alt={track.title}
-                  className={styles.albumArt}
-                />
-
-                <div className={styles.trackInfo}>
-                  <p>{track.title}</p>
-                  <p>{track.artist}</p>
-                  <p>{track.description}</p>
+              <img
+                src={track.albumArt}
+                alt={track.title}
+                className={styles.trackImage}
+              />
+              <div className={styles.trackInfo}>
+                <div className={styles.trackTitle}>{track.title}</div>
+                <div className={styles.trackArtist}>{track.artist}</div>
+                <div className={styles.trackDescription}>
+                  {track.description}
                 </div>
-
-                {/* Music control buttons */}
                 <div className={styles.musicControls}>
                   <FontAwesomeIcon
-                    icon={faPlay}
+                    icon={faBackward}
                     className={styles.controlIcon}
                   />
                   <FontAwesomeIcon
-                    icon={faPause}
+                    icon={faPlay}
                     className={styles.controlIcon}
+                    onClick={() => handlePlayTrack(track.title)}
                   />
                   <FontAwesomeIcon
                     icon={faForward}
@@ -226,10 +227,10 @@ const Main: React.FC = () => {
                   />
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
-      </BackgroundBeams>
+      </div>
     </div>
   );
 };
