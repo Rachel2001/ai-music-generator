@@ -1,0 +1,13 @@
+{
+    "songs": [
+      {
+        "id": "song1",
+        "title": "Song Title",
+        "artist": "Artist Name",
+        "genre": "Pop",
+        "release_year": "2021",
+        "link": "https://song-link.com"
+      }
+    ]
+  }
+  
