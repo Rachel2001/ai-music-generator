@@ -1,34 +1,35 @@
 from dotenv import load_dotenv
 load_dotenv()
-from pinecone import Pinecone, ServerlessSpec
-from openai import OpenAI
+
+import pinecone  # Import the pinecone module
+import openai    # Import the openai module
 import os
 import json
 
 # Initialize Pinecone
-pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
+pinecone.init(api_key=os.getenv("PINECONE_API_KEY"))
 
 # Create Pinecone index for music embeddings
-pc.create_index(
+pinecone.create_index(
     name="music-index",
     dimension=1536,  # Adjust the dimension as per the embedding model
     metric="cosine",
-    spec=ServerlessSpec(cloud="aws", region="us-east-1"),
+    pod_type="p1"  # Use the appropriate pod_type, ServerlessSpec is not required for basic usage
 )
 
 # Load music data
 data = json.load(open("music.json"))
 
 processed_data = []
-client = OpenAI()
+openai.api_key = os.getenv("OPENAI_API_KEY")  # Set OpenAI API key
 
 # Create embeddings for each song
 for song in data["songs"]:
-    response = client.embeddings.create(
+    response = openai.Embedding.create(
         input=f"{song['title']} by {song['artist']} - {song['genre']}",
-        model="text-embedding-3-small"
+        model="text-embedding-ada-002"  # Use an appropriate OpenAI embedding model
     )
-    embedding = response.data[0].embedding
+    embedding = response['data'][0]['embedding']
     processed_data.append(
         {
             "values": embedding,
@@ -44,7 +45,7 @@ for song in data["songs"]:
     )
 
 # Insert the embeddings into the Pinecone index
-index = pc.Index("music-index")
+index = pinecone.Index("music-index")
 upsert_response = index.upsert(
     vectors=processed_data,
     namespace="music-namespace",
