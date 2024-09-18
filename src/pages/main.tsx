@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useRouter } from "next/router"; // Import useRouter
 import styles from "../styles/MainPage.module.css";
 import BackgroundBeams from "../components/ui/background-beams";
 import { PlaceholdersAndVanishInput } from "../components/ui/placeholders-and-vanish-input";
@@ -114,6 +115,7 @@ const Main: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const [currentTab, setCurrentTab] = useState<keyof TracksData>("today");
   const [playingTrack, setPlayingTrack] = useState<string | null>(null);
+  const router = useRouter(); // Initialize useRouter
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
@@ -122,6 +124,12 @@ const Main: React.FC = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("Form submitted with value:", inputValue);
+
+    // Navigate to the songComparison page with the input value as a query parameter
+    router.push({
+      pathname: "/songComparison",
+      query: { prompt: inputValue },
+    });
   };
 
   const handleTabClick = (tab: keyof TracksData) => {
@@ -138,7 +146,6 @@ const Main: React.FC = () => {
     }
   };
 
-  // Function to format the tab labels
   const formatTabLabel = (tab: string) => {
     return tab
       .replace(/([A-Z])/g, " $1") // Insert a space before capital letters
