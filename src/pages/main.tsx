@@ -160,9 +160,7 @@ const Main: React.FC = () => {
           <h2 className={styles.headerText}>Generate your tracks here!</h2>
         </div>
         <div className={styles.searchBar}>
-          <form onSubmit={handleSubmit}>
             <PlaceholdersAndVanishInput onChange={handleChange} />
-          </form>
         </div>
         <div className={styles.subHeading}>Top Genres</div>
         <div className={styles.categories}>
