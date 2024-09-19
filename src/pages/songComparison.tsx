@@ -1,69 +1,212 @@
-import { useState } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import styles from "../styles/songPage.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPlay,
+  faPause,
+  faForward,
+  faBackward,
+  faArrowLeft,
+} from "@fortawesome/free-solid-svg-icons";
 
-interface Track {
-  id: number;
+interface GeneratedMusic {
   title: string;
-  audioUrl: string;
+  artist: string;
+  genre: string;
+  albumArt: string;
+  link: string;
 }
 
+const musicData: Record<string, GeneratedMusic> = {
+  "Igniting the Flame": {
+    title: "Igniting the Flame",
+    artist: "Rock Band",
+    genre: "Rock",
+    albumArt: "/images/rocknroll-track1-image.jpg",
+    link: "/audio/Igniting the Flame.mp3",
+  },
+  "Fire in the Night": {
+    title: "Fire in the Night",
+    artist: "Rock Band",
+    genre: "Rock",
+    albumArt: "/images/rocknroll-track2-image.jpg",
+    link: "/audio/Fire in the Night.mp3",
+  },
+  "Chasing the Night": {
+    title: "Chasing the Night",
+    artist: "Pop Band",
+    genre: "Pop",
+    albumArt: "/images/pop-track3-image.jpg",
+    link: "/audio/Chasing the Night.mp3",
+  },
+  "Endless Night": {
+    title: "Endless Night",
+    artist: "Pop Band",
+    genre: "Pop",
+    albumArt: "/images/pop-track4-image.jpg",
+    link: "/audio/Endless Night.mp3",
+  },
+  "Rhythms of Unity": {
+    title: "Rhythms of Unity",
+    artist: "Hip-hop Artist",
+    genre: "Hip-Hop",
+    albumArt: "/images/hiphop-track5-image.jpg",
+    link: "/audio/Rhythms of Unity.mp3",
+  },
+  "Crowns of Strength": {
+    title: "Crowns of Strength",
+    artist: "Hip-hop Artist",
+    genre: "Hip-Hop",
+    albumArt: "/images/hiphop-track6-image.jpg",
+    link: "/audio/Crowns of Strength.mp3",
+  },
+  "City Lights and Rhythms": {
+    title: "City Lights & Rhythms",
+    artist: "Jazz Band",
+    genre: "Jazz",
+    albumArt: "/images/jazz-track7-image.jpg",
+    link: "/audio/City Lights and Rhythms.mp3",
+  },
+  "Moonlight Rhythms": {
+    title: "Moonlight Rhythms",
+    artist: "Jazz Band",
+    genre: "Jazz",
+    albumArt: "/images/jazz-track7-image.jpg",
+    link: "/audio/Moonlight Rhythms.mp3",
+  },
+};
+
 const SongComparison: React.FC = () => {
-  const [prompt, setPrompt] = useState<string>("");
-  const [tracks, setTracks] = useState<Track[]>([]); // Array of Track objects
-  const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
+  const { category } = router.query;
+  const [audioInstances, setAudioInstances] = useState<
+    Record<string, HTMLAudioElement>
+  >({});
+  const [playingStates, setPlayingStates] = useState<Record<string, boolean>>(
+    {}
+  );
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPrompt(e.target.value);
+  // Filter music based on the selected category
+  const filteredTracks = Object.values(musicData)
+    .filter(
+      (track) =>
+        track.genre.toLowerCase() === category?.toString().toLowerCase()
+    )
+    .slice(0, 2);
+
+  useEffect(() => {
+    // Create audio instances for each track
+    const newAudioInstances: Record<string, HTMLAudioElement> = {};
+    filteredTracks.forEach((track) => {
+      newAudioInstances[track.title] = new Audio(track.link);
+    });
+    setAudioInstances(newAudioInstances);
+
+    // Cleanup function
+    return () => {
+      Object.values(newAudioInstances).forEach((audio) => {
+        audio.pause();
+        audio.currentTime = 0;
+      });
+    };
+  }, [category]);
+
+  const handlePlayPause = (trackTitle: string) => {
+    const audio = audioInstances[trackTitle];
+    if (audio) {
+      if (playingStates[trackTitle]) {
+        audio.pause();
+      } else {
+        // Pause all other tracks
+        Object.entries(audioInstances).forEach(([title, audioInstance]) => {
+          if (title !== trackTitle) {
+            audioInstance.pause();
+            setPlayingStates((prev) => ({ ...prev, [title]: false }));
+          }
+        });
+        audio.play().catch((err) => console.error("Playback error:", err));
+      }
+      setPlayingStates((prev) => ({
+        ...prev,
+        [trackTitle]: !prev[trackTitle],
+      }));
+    }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
+  const handleTrackChange = (
+    trackTitle: string,
+    direction: "previous" | "next"
+  ) => {
+    const currentIndex = filteredTracks.findIndex(
+      (track) => track.title === trackTitle
+    );
+    let newIndex;
+    if (direction === "next") {
+      newIndex = (currentIndex + 1) % filteredTracks.length;
+    } else {
+      newIndex =
+        (currentIndex - 1 + filteredTracks.length) % filteredTracks.length;
+    }
+    const newTrack = filteredTracks[newIndex];
 
-    // Simulate fetching two AI-generated tracks (replace with actual API call)
-    const fetchedTracks = await mockFetchTracks(prompt);
+    // Stop the current track and start the new one
+    audioInstances[trackTitle].pause();
+    audioInstances[trackTitle].currentTime = 0;
+    setPlayingStates((prev) => ({ ...prev, [trackTitle]: false }));
 
-    setTracks(fetchedTracks);
-    setLoading(false);
-  };
-
-  // This is a mock function, replace it with the actual API call
-  const mockFetchTracks = async (prompt: string): Promise<Track[]> => {
-    return [
-      { id: 1, title: "Track 1", audioUrl: "/audio/track1.mp3" },
-      { id: 2, title: "Track 2", audioUrl: "/audio/track2.mp3" },
-    ];
+    audioInstances[newTrack.title]
+      .play()
+      .catch((err) => console.error("Playback error:", err));
+    setPlayingStates((prev) => ({ ...prev, [newTrack.title]: true }));
   };
 
   return (
-    <div>
-      <h1>Song Comparison</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Enter a prompt"
-          value={prompt}
-          onChange={handleChange}
-        />
-        <button type="submit">Generate Tracks</button>
-      </form>
-
-      {loading && <p>Loading tracks...</p>}
-
-      {tracks.length > 0 && (
-        <div>
-          <h2>Select which song is better:</h2>
-          {tracks.map((track) => (
-            <div key={track.id}>
-              <h3>{track.title}</h3>
-              <audio controls>
-                <source src={track.audioUrl} type="audio/mpeg" />
-                Your browser does not support the audio tag.
-              </audio>
-              <button>Choose this song</button>
+    <div className={styles.songPageContainer}>
+      <button className={styles.backButton} onClick={() => router.back()}>
+        <FontAwesomeIcon icon={faArrowLeft} />
+      </button>
+      <div className={styles.songHeader}>
+        <h2 className={styles.songHeaderText}>Enjoy your AI Generated Songs!</h2>
+      </div>
+      {category && <h3 className={styles.categoryText}>{category}</h3>}
+      <div className={styles.songsContainer}>
+        {filteredTracks.map((track) => (
+          <div key={track.title} className={styles.songContainer}>
+            <img
+              src={track.albumArt}
+              alt={track.title}
+              className={styles.albumArt}
+            />
+            <div className={styles.songInfo}>
+              <h4 className={styles.songTitle}>{track.title}</h4>
+              <p className={styles.songArtist}>{track.artist}</p>
             </div>
-          ))}
-        </div>
-      )}
+            <div className={styles.musicControls}>
+              <button
+                className={styles.controlButton}
+                onClick={() => handleTrackChange(track.title, "previous")}
+              >
+                <FontAwesomeIcon icon={faBackward} />
+              </button>
+              <button
+                className={styles.controlButton}
+                onClick={() => handlePlayPause(track.title)}
+              >
+                <FontAwesomeIcon
+                  icon={playingStates[track.title] ? faPause : faPlay}
+                />
+              </button>
+              <button
+                className={styles.controlButton}
+                onClick={() => handleTrackChange(track.title, "next")}
+              >
+                <FontAwesomeIcon icon={faForward} />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

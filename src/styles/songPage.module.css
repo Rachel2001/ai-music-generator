@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+.songPageContainer {
+  background-color: #101010;
+  color: white;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+  position: relative; /* Added for positioning the back button */
+}
+
+.songHeader {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.songHeaderText {
+  font-size: 34px;
+  font-weight: bold;
+  color: white;
+}
+
+.categoryText {
+  color: white;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  text-transform: uppercase;
+}
+
+.songsContainer {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  width: 100%;
+}
+
+.songContainer {
+  background-color: #1c1c1c;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 500px;
+  padding: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.songContainer:hover {
+  background-color: #2a2a2a;
+  transform: scale(1.02);
+}
+
+.albumArt {
+  width: 100%;
+  height: auto;
+  max-height: 200px;
+  border-radius: 8px;
+}
+
+.songInfo {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.songTitle {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.songArtist {
+  font-size: 14px;
+}
+
+.musicControls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.controlButton {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.controlButton:hover {
+  color: #f39c12;
+}
+
+.backButton {
+  position: absolute; 
+  top: 20px;
+  left: 20px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.backButton:hover {
+  color: #f39c12;
+}
+
+
