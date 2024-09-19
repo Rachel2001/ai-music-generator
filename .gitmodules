@@ -1,0 +1,3 @@
+[submodule "ai-music-generator"]
+    path = ai-music-generator
+    url = https://github.com/Rachel2001/ai-music-generator-submodule
