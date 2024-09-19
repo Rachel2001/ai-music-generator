@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useRouter } from "next/router"; // Import useRouter
+import { useRouter } from "next/router";
 import styles from "../styles/MainPage.module.css";
 import BackgroundBeams from "../components/ui/background-beams";
 import { PlaceholdersAndVanishInput } from "../components/ui/placeholders-and-vanish-input";
@@ -111,25 +111,33 @@ const tracksData: TracksData = {
   ],
 };
 
-const Main: React.FC = () => {
+
+const MainPage: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const [currentTab, setCurrentTab] = useState<keyof TracksData>("today");
   const [playingTrack, setPlayingTrack] = useState<string | null>(null);
-  const router = useRouter(); // Initialize useRouter
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("Form submitted with value:", inputValue);
+  const handleSubmit = () => {
+    const genres = ["pop", "rock", "hip-hop", "jazz"];
+    const lowerCaseInput = inputValue.toLowerCase();
 
-    // Navigate to the songComparison page with the input value as a query parameter
-    router.push({
-      pathname: "/songComparison",
-      query: { prompt: inputValue },
-    });
+    const matchedGenre = genres.find((genre) => lowerCaseInput.includes(genre));
+
+    if (matchedGenre) {
+      router.push({
+        pathname: "/songComparison",
+        query: { category: matchedGenre, prompt: inputValue },
+      });
+    } else {
+      alert(
+        "Please include a genre (pop, rock, hip-hop, or jazz) in your prompt."
+      );
+    }
   };
 
   const handleTabClick = (tab: keyof TracksData) => {
@@ -137,21 +145,11 @@ const Main: React.FC = () => {
   };
 
   const handlePlayTrack = (trackTitle: string) => {
-    if (playingTrack === trackTitle) {
-      console.log(`Paused: ${trackTitle}`);
-      setPlayingTrack(null); // Stop playing if the same track is clicked again
-    } else {
-      console.log(`Playing: ${trackTitle}`);
-      setPlayingTrack(trackTitle); // Set the track as playing
-    }
+    setPlayingTrack(playingTrack === trackTitle ? null : trackTitle);
   };
 
-  const formatTabLabel = (tab: string) => {
-    return tab
-      .replace(/([A-Z])/g, " $1") // Insert a space before capital letters
-      .replace(/^./, (str) => str.toUpperCase()) // Capitalize the first letter
-      .trim(); // Remove any leading/trailing spaces
-  };
+  const formatTabLabel = (tab: string) =>
+    tab.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase());
 
   return (
     <div className={styles.mainPageContainer}>
@@ -159,9 +157,10 @@ const Main: React.FC = () => {
         <div className={styles.header}>
           <h2 className={styles.headerText}>Generate your tracks here!</h2>
         </div>
-        <div className={styles.searchBar}>
-            <PlaceholdersAndVanishInput onChange={handleChange} />
-        </div>
+        <PlaceholdersAndVanishInput
+          onChange={handleChange}
+          onSubmit={handleSubmit}
+        />
         <div className={styles.subHeading}>Top Genres</div>
         <div className={styles.categories}>
           {categories.map((category) => (
@@ -179,6 +178,7 @@ const Main: React.FC = () => {
             </div>
           ))}
         </div>
+
         <div className={styles.subHeading}>Top Tracks</div>
         <div className={styles.tabButtons}>
           {Object.keys(tracksData).map((tab) => (
@@ -195,6 +195,7 @@ const Main: React.FC = () => {
             </button>
           ))}
         </div>
+
         <div className={styles.tracks}>
           {tracksData[currentTab].map((track) => (
             <div
@@ -240,4 +241,4 @@ const Main: React.FC = () => {
   );
 };
 
-export default Main;
+export default MainPage;
